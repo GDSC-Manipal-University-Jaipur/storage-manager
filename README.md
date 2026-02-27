@@ -4,11 +4,11 @@ A Chrome/Edge browser extension for Linux users that automatically pauses downlo
 
 ## Features
 
-- 🛑 **Automatic Download Pausing**: Automatically pauses all downloads when they start
-- 💾 **Real-time Disk Space Display**: Shows available disk space with visual progress bar
-- ✅ **Smart Space Checking**: Verifies sufficient space before resuming downloads
-- 🎨 **Modern UI**: Beautiful, intuitive interface with color-coded space indicators
-- 🔒 **Safety Buffer**: Maintains a configurable reserved space buffer (default: 5GB)
+ **Automatic Download Pausing**: Automatically pauses all downloads when they start
+ **Real-time Disk Space Display**: Shows available disk space with visual progress bar
+ **Smart Space Checking**: Verifies sufficient space before resuming downloads
+ **Modern UI**: Beautiful, intuitive interface with color-coded space indicators
+ **Safety Buffer**: Maintains a configurable reserved space buffer (default: 5GB)
 
 ## Screenshots
 
