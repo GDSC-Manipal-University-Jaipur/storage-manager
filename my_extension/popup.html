@@ -11,9 +11,11 @@
   <!-- Unified Download Manager -->
   <div id="viewManager" class="view-container active-view">
 
-    <div id="diskInfo" class="disk-info">
-      <!-- Free space injected here via JS -->
-      <div class="loading">Loading disk space...</div>
+    <div class="main-card">
+      <div id="diskInfo" class="disk-info">
+        <!-- Free space injected here via JS -->
+        <div class="loading">Loading disk space...</div>
+      </div>
     </div>
 
     <div id="managerEmptyState" class="empty-state">
@@ -28,9 +30,9 @@
     <div id="backendStats" class="backend-stats">
       <div class="stats-header">⚙️ Backend Counters</div>
       <div class="stats-row">
-        <span>Paused: <span id="statPause">0</span></span>
-        <span>Resumed: <span id="statResume">0</span></span>
-        <span>Canceled: <span id="statCancel">0</span></span>
+        <span class="stat-paused">Paused: <span id="statPause">0</span></span>
+        <span class="stat-resumed">Resumed: <span id="statResume">0</span></span>
+        <span class="stat-canceled">Canceled: <span id="statCancel">0</span></span>
       </div>
     </div>
   </div>
@@ -41,19 +43,18 @@
     <div class="download-item">
       <div class="dl-info-row">
         <span class="dl-name"></span>
-        <span class="dl-status"></span>
+        <div class="dl-controls">
+          <button class="dl-btn dl-btn-pause" title="Pause">⏸</button>
+          <button class="dl-btn dl-btn-resume" title="Resume" style="display: none;">▶</button>
+          <button class="dl-btn dl-btn-cancel" title="Cancel">✕</button>
+        </div>
       </div>
       <div class="dl-progress-bar">
         <div class="dl-progress-fill"></div>
       </div>
       <div class="dl-stats-row">
         <span class="dl-size"></span>
-        <span class="dl-speed"></span>
-      </div>
-      <div class="dl-controls">
-        <button class="dl-btn dl-btn-pause" title="Pause">⏸️</button>
-        <button class="dl-btn dl-btn-resume" title="Resume" style="display: none;">▶️</button>
-        <button class="dl-btn dl-btn-cancel" title="Cancel">❌</button>
+        <span class="dl-status"></span>
       </div>
     </div>
   </template>

@@ -45,33 +45,55 @@ async function loadDiskInfo(path) {
         const percentUsed = data.percent_used;
         const percentFree = 100 - percentUsed;
 
-        let barClass = "high";
-        if (percentFree < 10) barClass = "low";
-        else if (percentFree < 25) barClass = "medium";
+        let colorClass = "high";
+        if (percentFree < 10) colorClass = "low";
+        else if (percentFree < 25) colorClass = "medium";
+
+        // SVG circle math
+        const radius = 65;
+        const circumference = 2 * Math.PI * radius;
+        const offset = circumference - (percentFree / 100) * circumference;
 
         diskInfoDiv.innerHTML = `
-            <div class="disk-info-header">
-                <div class="disk-info-title">💾 Available Disk Space</div>
+            <div class="disk-title">Available Disk Space</div>
+            <div class="circle-progress-wrapper">
+                <svg viewBox="0 0 160 160">
+                    <defs>
+                        <linearGradient id="circleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#7ec8c8" />
+                            <stop offset="100%" stop-color="#9b7ed8" />
+                        </linearGradient>
+                        <linearGradient id="circleGradWarn" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#f0c060" />
+                            <stop offset="100%" stop-color="#e09040" />
+                        </linearGradient>
+                        <linearGradient id="circleGradDanger" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#e87070" />
+                            <stop offset="100%" stop-color="#d04040" />
+                        </linearGradient>
+                    </defs>
+                    <circle class="circle-inner-bg" cx="80" cy="80" r="52" />
+                    <circle class="circle-bg" cx="80" cy="80" r="${radius}" />
+                    <circle class="circle-fill ${colorClass}" cx="80" cy="80" r="${radius}"
+                        stroke-dasharray="${circumference}"
+                        stroke-dashoffset="${offset}" />
+                </svg>
+                <div class="circle-center-text">
+                    <span class="circle-free-value">${data.free_gb}<span class="unit">GB</span></span>
+                    <span class="circle-free-label">Free</span>
+                    <span class="circle-used-inner">Used: ${data.used_gb} GB</span>
+                </div>
             </div>
-            <div class="disk-info-path" title="${data.path}">${data.path}</div>
-            <div class="disk-space-display">
-                <div class="free-space-label">Free Space</div>
-                <div class="free-space">${data.free_gb} GB</div>
-                <div class="space-bar-container">
-                    <div class="space-bar ${barClass}" style="width: ${percentFree}%">
-                        ${percentFree.toFixed(1)}%
-                    </div>
-                </div>
-                <div class="space-stats">
-                    <span>Used: ${data.used_gb} GB</span>
-                    <span>Total: ${data.total_gb} GB</span>
-                </div>
+            <div class="disk-usage-summary">
+                <span>Used: ${data.used_gb} GB</span>
+                <span class="dot"></span>
+                <span>Total: ${data.total_gb} GB</span>
             </div>
         `;
     } catch (err) {
         console.error("Error loading disk info:", err);
         diskInfoDiv.innerHTML = `
-            <div class="loading" style="color: #e53e3e;">
+            <div class="loading" style="color: #c05050;">
                 ⚠️ Could not load disk space info.<br>
                 <small>Make sure the native messaging host is installed</small>
             </div>
@@ -224,48 +246,25 @@ async function renderDownloads() {
             const btnPause = itemDiv.querySelector('.dl-btn-pause');
             const btnResume = itemDiv.querySelector('.dl-btn-resume');
             const btnCancel = itemDiv.querySelector('.dl-btn-cancel');
-            const speedEl = itemDiv.querySelector('.dl-speed');
 
             if (dl.paused) {
-                statusSpan.textContent = "PAUSED";
+                statusSpan.textContent = "Paused";
                 progressFill.classList.add("paused");
                 btnPause.style.display = "none";
-                btnResume.style.display = "inline-block";
-                btnCancel.style.display = "inline-block";
-                speedEl.textContent = "⏸ Paused";
+                btnResume.style.display = "flex";
+                btnCancel.style.display = "flex";
             } else if (dl.state === 'interrupted') {
-                statusSpan.textContent = "INTERRUPTED";
+                statusSpan.textContent = "Interrupted";
                 progressFill.classList.add("paused");
                 btnPause.style.display = "none";
-                btnResume.style.display = "inline-block";
-                btnCancel.style.display = "inline-block";
-                speedEl.textContent = "Click ▶️ to resume";
+                btnResume.style.display = "flex";
+                btnCancel.style.display = "flex";
             } else {
-                statusSpan.textContent = "DOWNLOADING";
+                statusSpan.textContent = "Downloading";
                 progressFill.classList.remove("paused");
-                btnPause.style.display = "inline-block";
+                btnPause.style.display = "flex";
                 btnResume.style.display = "none";
-                btnCancel.style.display = "inline-block";
-
-                // Speed estimation
-                if (dl.estimatedEndTime) {
-                    try {
-                        const now = new Date();
-                        const end = new Date(dl.estimatedEndTime);
-                        const secondsLeft = Math.max(0, (end - now) / 1000);
-                        if (secondsLeft > 0 && dl.totalBytes > 0) {
-                            const bytesLeft = dl.totalBytes - dl.bytesReceived;
-                            const speedBps = bytesLeft / secondsLeft;
-                            speedEl.textContent = formatBytes(speedBps) + '/s';
-                        } else {
-                            speedEl.textContent = "Finishing...";
-                        }
-                    } catch (e) {
-                        speedEl.textContent = "Calculating...";
-                    }
-                } else {
-                    speedEl.textContent = "Starting...";
-                }
+                btnCancel.style.display = "flex";
             }
 
             // ---- Attach event listeners ONCE per download ----
