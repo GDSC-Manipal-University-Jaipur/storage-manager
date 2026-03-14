@@ -9,10 +9,6 @@ chrome.downloads.onCreated.addListener(async (item) => {
         await chrome.downloads.pause(item.id);
         console.log("Download paused successfully:", item.id);
 
-        // Pause the download immediately
-        await chrome.downloads.pause(item.id);
-        console.log("Download paused successfully:", item.id);
-
         // Open the popup automatically
         try {
             await chrome.action.openPopup();

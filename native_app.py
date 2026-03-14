@@ -1,7 +1,7 @@
 import sys
 import json
 import struct
-import psutil
+import shutil
 import os
 import datetime
 
@@ -11,6 +11,11 @@ RESERVED_SPACE = 5 * 1024**3            # Always keep 5 GB free
 ACTIVE_RESERVATIONS = 0
 
 STATS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "stats.json")
+
+def get_disk_usage(path):
+    """Get disk usage using shutil.disk_usage (cross-platform, no external dependencies)"""
+    total, used, free = shutil.disk_usage(path)
+    return total, used, free
 
 def load_stats():
     if os.path.exists(STATS_FILE):
@@ -63,15 +68,12 @@ def handle_info(path):
     
     try:
         resolved_path = os.path.realpath(path)
-        usage = psutil.disk_usage(resolved_path)
+        total, used, free = get_disk_usage(resolved_path)
     except Exception as e:
         error_msg = f"Path '{path}' not accessible: {str(e)}"
         log(error_msg)
         return {"ok": False, "error": error_msg}
 
-    free = usage.free
-    total = usage.total
-    used = usage.used
     percent_used = (used / total) * 100 if total > 0 else 0
     
     log(f"Info results: free={bytes_to_gb(free):.2f} GB")
@@ -105,15 +107,11 @@ def handle_check(size_str, path):
 
     try:
         resolved_path = os.path.realpath(path)
-        usage = psutil.disk_usage(resolved_path)
+        total, used, free = get_disk_usage(resolved_path)
     except Exception as e:
         error_msg = f"Path '{path}' not accessible: {str(e)}"
         log(error_msg)
         return {"ok": False, "error": error_msg}
-
-    free = usage.free
-    total = usage.total
-    used = usage.used
 
     if free < required_space:
         msg = f" Not enough space. Free: {bytes_to_gb(free):.2f} GB, Required: {bytes_to_gb(required_space):.2f} GB"

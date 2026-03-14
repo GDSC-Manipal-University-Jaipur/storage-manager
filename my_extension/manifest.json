@@ -1,12 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "Disk Space Flask Checker",
+  "name": "Disk Space Native Checker",
   "version": "2.0",
-  "description": "Checks available disk space before downloads.",
+  "description": "Checks available disk space before downloads using native messaging.",
   "permissions": [
     "downloads",
     "storage",
     "nativeMessaging"
+  ],
+  "host_permissions": [
+    "chrome://extensions/"
   ],
   "background": {
     "service_worker": "background.js"
@@ -26,4 +29,3 @@
     "128": "icon.png"
   }
 }
-

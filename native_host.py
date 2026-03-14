@@ -15,13 +15,18 @@ Communication protocol:
 import sys
 import json
 import struct
-import psutil
+import shutil
 import os
 
 # Configuration
 DEFAULT_MIN_SIZE = 1 * 1000000000     # 1 GB (decimal)
 RESERVED_SPACE   = 5 * 1000000000     # 5 GB (decimal)
    # Always keep 5 GB free
+
+def get_disk_usage(path):
+    """Get disk usage using shutil.disk_usage (cross-platform, no external dependencies)"""
+    total, used, free = shutil.disk_usage(path)
+    return total, used, free
 
 def bytes_to_gb(b):
     """Convert bytes to gigabytes"""
@@ -46,11 +51,8 @@ def get_disk_info(path):
     """Get current disk space information"""
     try:
         resolved_path = normalize_path(path)
-        usage = psutil.disk_usage(resolved_path)
+        total, used, free = get_disk_usage(resolved_path)
         
-        free = usage.free
-        total = usage.total
-        used = usage.used
         percent_used = (used / total) * 100 if total > 0 else 0
         
         return {
@@ -84,11 +86,7 @@ def check_space(size_bytes, path):
         
         # Get disk usage
         resolved_path = normalize_path(path)
-        usage = psutil.disk_usage(resolved_path)
-        
-        free = usage.free
-        total = usage.total
-        used = usage.used
+        total, used, free = get_disk_usage(resolved_path)
         
         # Check if enough space
         if free < required_space:

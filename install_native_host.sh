@@ -22,7 +22,7 @@ WRAPPER="$(realpath "$WRAPPER" 2>/dev/null || echo "$WRAPPER")"
 # ---- create wrapper script ----
 cat > "$WRAPPER" <<EOF
 #!/bin/bash
-exec /usr/bin/python3 "$PY_HOST"
+exec $(which python3) "$PY_HOST"
 EOF
 
 chmod +x "$WRAPPER"
@@ -77,6 +77,23 @@ install_manifest "$HOME/.config/BraveSoftware/Brave-Browser/NativeMessagingHosts
 
 # Edge
 install_manifest "$HOME/.config/microsoft-edge/NativeMessagingHosts"
+
+# ---- install com.storagemanager.app host ----
+STORAGE_MANIFEST="$(realpath "$SCRIPT_DIR/com.storagemanager.app.json")"
+install_storage_manifest() {
+    local DIR="$1"
+    if [ -d "$(dirname "$DIR")" ]; then
+        mkdir -p "$DIR"
+        cp "$STORAGE_MANIFEST" "$DIR/com.storagemanager.app.json"
+        echo "✓ Installed: $DIR/com.storagemanager.app.json"
+    fi
+}
+
+echo "Installing com.storagemanager.app native host..."
+install_storage_manifest "$HOME/.config/google-chrome/NativeMessagingHosts"
+install_storage_manifest "$HOME/.config/chromium/NativeMessagingHosts"
+install_storage_manifest "$HOME/.config/BraveSoftware/Brave-Browser/NativeMessagingHosts"
+install_storage_manifest "$HOME/.config/microsoft-edge/NativeMessagingHosts"
 
 rm "$TEMP_MANIFEST"
 

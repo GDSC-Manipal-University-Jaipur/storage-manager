@@ -4,6 +4,6 @@
   "path": "native_app.bat",
   "type": "stdio",
   "allowed_origins": [
-    "chrome-extension://jpkckkklhkapkpmcjpdfhpgofafeiofl/"
+    "chrome-extension://ngheljojlbgcbllghppaogeagblmcjib/"
   ]
 }
