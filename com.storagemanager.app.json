@@ -1,0 +1,9 @@
+{
+  "name": "com.storagemanager.app",
+  "description": "Storage Manager Native Host",
+  "path": "native_app.bat",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://jpkckkklhkapkpmcjpdfhpgofafeiofl/"
+  ]
+}

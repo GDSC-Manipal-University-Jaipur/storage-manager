@@ -19,6 +19,9 @@ DEFAULT_MIN_SIZE = 1 * 1024**3          # 1 GB assumed if unknown
 RESERVED_SPACE = 5 * 1024**3            # Always keep 5 GB free
 PORT = 5000
 
+#Track active reserved download space (bytes)
+ACTIVE_RESERVATIONS = 0
+
 @app.route('/info')
 def get_disk_info():
     """Get current disk space information without checking a specific size"""
@@ -69,7 +72,9 @@ def check_space():
         size = DEFAULT_MIN_SIZE
 
     # Calculate required space: requested size + reserved buffer
-    required_space = size + RESERVED_SPACE
+    global ACTIVE_RESERVATIONS
+    required_space = size + RESERVED_SPACE + ACTIVE_RESERVATIONS
+
 
     # Normalize the path - if it's a file path, get its directory
     if path and os.path.isfile(path):
@@ -115,15 +120,23 @@ def check_space():
             error=msg
         )
     else:
-        msg = f" Enough space. Free: {bytes_to_gb(free):.2f} GB"
+        ACTIVE_RESERVATIONS += size
+
+        msg = (
+        f" Enough space. Reserved {bytes_to_gb(size):.2f} GB. "
+        f"Active reservations: {bytes_to_gb(ACTIVE_RESERVATIONS):.2f} GB"
+        )
         log(msg)
+
         return jsonify(
             ok=True,
             total=total,
             used=used,
             free=free,
-            reserved=RESERVED_SPACE
+            reserved=RESERVED_SPACE,
+            active_reserved=ACTIVE_RESERVATIONS
         )
+
 
 def bytes_to_gb(b):
     return b / 1024**3
