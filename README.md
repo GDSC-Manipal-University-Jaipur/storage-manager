@@ -55,12 +55,7 @@ The extension consists of two main components:
 
 ### Step 1: Install Python Dependencies
 
-```bash
-cd /path/to/storage-manager
-python3 -m venv venv
-source venv/bin/activate
-pip install flask psutil
-```
+No external dependencies required! The native messaging version uses only Python's standard library.
 
 ### Step 2: Load the Extension
 

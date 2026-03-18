@@ -1,3 +1,6 @@
+// Track downloads we are pausing for disk check
+const checkingDownloads = new Set();
+
 chrome.downloads.onCreated.addListener(async (item) => {
     console.log("Download started:", item);
 
@@ -6,15 +9,10 @@ chrome.downloads.onCreated.addListener(async (item) => {
         await chrome.downloads.pause(item.id);
         console.log("Download paused successfully:", item.id);
 
-        // Save it for the popup to handle
-        await chrome.storage.local.set({ pendingDownload: item });
-
         // Open the popup automatically
         try {
             await chrome.action.openPopup();
         } catch (err) {
-            // Popup might not open if user already has it open or if browser doesn't allow it
-            // In that case, show a notification or badge
             console.log("Could not auto-open popup:", err);
             chrome.action.setBadgeText({ text: "!" });
             chrome.action.setBadgeBackgroundColor({ color: "#f44336" });
@@ -31,4 +29,40 @@ chrome.downloads.onCreated.addListener(async (item) => {
         // For other errors, log but don't cancel
         console.error("Error pausing download:", error);
     }
+});
+
+// Smart Categorization: Route files based on extensions
+chrome.downloads.onDeterminingFilename.addListener((item, suggest) => {
+    const filename = item.filename;
+    const extension = filename.split('.').pop().toLowerCase();
+
+    let subfolder = "";
+
+    const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
+    const videoExts = ['mp4', 'mkv', 'avi', 'mov', 'webm'];
+    const docExts = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt'];
+    const archiveExts = ['zip', 'rar', '7z', 'tar', 'gz'];
+    const audioExts = ['mp3', 'wav', 'ogg', 'flac'];
+    const codeExts = ['js', 'py', 'html', 'css', 'json', 'cpp', 'java'];
+
+    if (imageExts.includes(extension)) {
+        subfolder = "Images/";
+    } else if (videoExts.includes(extension)) {
+        subfolder = "Videos/";
+    } else if (docExts.includes(extension)) {
+        subfolder = "Documents/";
+    } else if (archiveExts.includes(extension)) {
+        subfolder = "Archives/";
+    } else if (audioExts.includes(extension)) {
+        subfolder = "Audio/";
+    } else if (codeExts.includes(extension)) {
+        subfolder = "Code/";
+    } else {
+        subfolder = "Others/";
+    }
+
+    suggest({
+        filename: subfolder + filename,
+        conflictAction: 'uniquify'
+    });
 });

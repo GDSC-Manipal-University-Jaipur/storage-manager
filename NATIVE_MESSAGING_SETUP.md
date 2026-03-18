@@ -14,14 +14,7 @@ This guide explains how to set up the native messaging alternative, which is mor
 
 ### Step 1: Install Python Dependencies
 
-```bash
-cd /path/to/storage-manager
-python3 -m venv venv
-source venv/bin/activate
-pip install psutil
-```
-
-Note: Flask is **not required** for native messaging!
+No external dependencies required! The native messaging host uses only Python's standard library.
 
 ### Step 2: Install Native Messaging Host
 
@@ -195,7 +188,7 @@ rm ~/.config/microsoft-edge/NativeMessagingHosts/com.storage_checker.json
 | **CPU Usage** | Minimal (idle) | 0% (when idle) |
 | **Startup Time** | Server must start | Instant |
 | **Setup Complexity** | Simple | Medium |
-| **Dependencies** | Flask + psutil | psutil only |
+| **Dependencies** | Flask + psutil | No external dependencies |
 | **Port Required** | Yes (5000) | No |
 | **Firewall Issues** | Possible | None |
 | **Production Ready** | Needs Gunicorn | Yes (native) |

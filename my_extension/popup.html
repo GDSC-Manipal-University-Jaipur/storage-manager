@@ -1,52 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>Disk Space Check</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Disk Space Check</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <div class="header">
-    <h3> Confirm Download</h3>
-  </div>
-  
-  <div id="diskInfo" class="disk-info">
-    <div class="loading">Loading disk space...</div>
-  </div>
-  
-  <div class="download-info">
-    <div class="info-section">
-      <div class="info-label">File:</div>
-      <div id="fileName" class="info-value">-</div>
+  <!-- Unified Download Manager -->
+  <div id="viewManager" class="view-container active-view">
+
+    <div class="main-card">
+      <div id="diskInfo" class="disk-info">
+        <!-- Free space injected here via JS -->
+        <div class="loading">Loading disk space...</div>
+      </div>
     </div>
-    <div class="info-section">
-      <div class="info-label">Size:</div>
-      <div id="fileSize" class="info-value">-</div>
+
+    <div id="managerEmptyState" class="empty-state">
+      <div class="empty-icon">📂</div>
+      <div class="empty-text">No active downloads</div>
     </div>
-    <div class="info-section">
-      <div class="info-label">Download Path:</div>
-      <div id="filePath" class="info-value path-value">-</div>
+
+    <div id="downloadsList" class="downloads-list">
+      <!-- Active downloads will be injected here via JS -->
+    </div>
+
+    <div id="backendStats" class="backend-stats">
+      <div class="stats-header">⚙️ Backend Counters</div>
+      <div class="stats-row">
+        <span class="stat-paused">Paused: <span id="statPause">0</span></span>
+        <span class="stat-resumed">Resumed: <span id="statResume">0</span></span>
+        <span class="stat-canceled">Canceled: <span id="statCancel">0</span></span>
+      </div>
     </div>
   </div>
-  
-  <div class="size-input-section">
-    <label for="sizeInput">Estimated size (MB, if unknown):</label>
-    <input type="number" id="sizeInput" placeholder="e.g. 100" min="0" step="0.01">
-  </div>
-  
-  <div class="button-group">
-    <button id="confirm" class="btn-confirm">
-      <span class="btn-icon">✓</span>
-      <span>Confirm</span>
-    </button>
-    <button id="cancel" class="btn-cancel">
-      <span class="btn-icon">✕</span>
-      <span>Cancel</span>
-    </button>
-  </div>
-  
   <div id="errorMessage" class="error-message"></div>
-  
+
+  <!-- Template for a single download item in the Manager View -->
+  <template id="downloadItemTemplate">
+    <div class="download-item">
+      <div class="dl-info-row">
+        <span class="dl-name"></span>
+        <span class="dl-status"></span>
+      </div>
+      <div class="dl-progress-bar">
+        <div class="dl-progress-fill"></div>
+      </div>
+      <div class="dl-stats-row">
+        <span class="dl-size"></span>
+        <span class="dl-speed"></span>
+      </div>
+      <div class="dl-controls">
+        <button class="dl-btn dl-btn-pause" title="Pause">⏸️</button>
+        <button class="dl-btn dl-btn-resume" title="Resume" style="display: none;">▶️</button>
+        <button class="dl-btn dl-btn-cancel" title="Cancel">❌</button>
+      </div>
+    </div>
+  </template>
+
   <script src="popup.js"></script>
 </body>
+
 </html>

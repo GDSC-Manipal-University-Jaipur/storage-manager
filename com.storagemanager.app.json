@@ -1,0 +1,10 @@
+{
+  "_comment": "This file is a template. The install scripts generate the real manifest with your extension ID and correct paths. Do not use this file directly.",
+  "name": "com.storagemanager.app",
+  "description": "Storage Manager Native Host",
+  "path": "GENERATED_BY_INSTALL_SCRIPT",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://YOUR_EXTENSION_ID_HERE/"
+  ]
+}
