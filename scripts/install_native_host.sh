@@ -11,14 +11,15 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+HOST_DIR="$(cd "$SCRIPT_DIR/../native-host" && pwd)"
 HOST_NAME="com.storagemanager.app"
-PY_HOST="$SCRIPT_DIR/native_app.py"
-WRAPPER="$SCRIPT_DIR/native_app.sh"
+PY_HOST="$HOST_DIR/native_host.py"
+WRAPPER="$HOST_DIR/native_host.sh"
 
 # ---- sanity checks ----------------------------------------
 
 if [ ! -f "$PY_HOST" ]; then
-    echo "ERROR: native_app.py not found in $SCRIPT_DIR"
+    echo "ERROR: native_host.py not found in $HOST_DIR"
     exit 1
 fi
 

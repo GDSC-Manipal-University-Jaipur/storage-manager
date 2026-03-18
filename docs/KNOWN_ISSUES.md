@@ -115,57 +115,18 @@ This is a limitation of the Chrome API. No practical solution exists, but the im
 
 ---
 
-### 4. Flask Server Dependency
+### 4. Background Server Requirements
 
-**Status**: Known Limitation  
-**Priority**: High  
-**Severity**: Medium
+**Status**: Resolved
+**Priority**: High
+**Severity**: None
 
-**Description**:  
-The extension requires a local Flask server to be running. If the server is not running, all downloads are canceled, which is frustrating for users.
+**Description**:
+The extension previously required a local Flask server to be running. If the server was not running, all downloads were canceled, which was frustrating for users. This has been resolved by migrating to **Native Messaging**.
 
 **Current Behavior**:
-- Extension tries to contact server
-- If server is down: Download is canceled
-- No automatic server startup
-- No server status indicator
-
-**Impact**:
-- Poor user experience if server isn't running
-- Downloads fail silently
-- Users must remember to start server
-
-**Workaround**:
-- Always start server before browsing
-- Use systemd service for auto-start (see README)
-- Add server to startup applications
-
-**Proposed Solutions**:
-
-1. **Server Status Indicator** (Quick fix)
-   - Add visual indicator in extension popup
-   - Show "Server offline" warning
-   - Estimated Effort: 2-3 hours
-
-2. **Auto-start Server** (Medium complexity)
-   - Detect if server is down
-   - Attempt to start server automatically
-   - Requires native messaging or external script
-   - Estimated Effort: 8-10 hours
-
-3. **Health Check Endpoint** (Easy)
-   - Add `/health` endpoint
-   - Extension pings on startup
-   - Show status in popup
-   - Estimated Effort: 1 hour
-
-4. **Native Messaging** (Complex)
-   - Replace Flask with native binary
-   - Auto-starts with browser
-   - Better integration
-   - Estimated Effort: 20+ hours
-
-**Recommended**: Implement solutions 1 and 3 first (health check + status indicator)
+- No background server is required.
+- The Native Messaging host runs natively and on-demand only when a download starts.
 
 ---
 

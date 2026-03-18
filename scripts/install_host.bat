@@ -14,14 +14,15 @@ set "SCRIPT_DIR=%~dp0"
 :: Remove trailing backslash
 if "%SCRIPT_DIR:~-1%"=="\" set "SCRIPT_DIR=%SCRIPT_DIR:~0,-1%"
 
+set "HOST_DIR=%SCRIPT_DIR%\..\native-host"
 set "HOST_NAME=com.storagemanager.app"
-set "LAUNCHER=%SCRIPT_DIR%\native_app.bat"
-set "MANIFEST=%SCRIPT_DIR%\%HOST_NAME%.json"
+set "LAUNCHER=%HOST_DIR%\native_host.bat"
+set "MANIFEST=%HOST_DIR%\%HOST_NAME%.json"
 
 :: ---- sanity checks ----------------------------------------
 
-if not exist "%SCRIPT_DIR%\native_app.py" (
-    echo ERROR: native_app.py not found in %SCRIPT_DIR%
+if not exist "%HOST_DIR%\native_host.py" (
+    echo ERROR: native_host.py not found in %HOST_DIR%
     pause
     exit /b 1
 )
